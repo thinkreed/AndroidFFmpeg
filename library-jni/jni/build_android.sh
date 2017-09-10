@@ -102,20 +102,20 @@ EOF
 
 function build_x264
 {
-	echo "Starting build x264 for $ARCH"
+	echo "Starting build x264 for $ARCH and $CPU"
 	cd x264
 	./configure --prefix=$PREFIX --host=$ARCH-linux --enable-static $ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
-	make -j4 install
+	make -j32 install
 	make clean
 	cd ..
-	echo "FINISHED x264 for $ARCH"
+	echo "FINISHED x264 for $ARCH and $CPU"
 }
 
 function build_amr
 {
-	echo "Starting build amr for $ARCH"
+	echo "Starting build amr for $ARCH and $CPU"
 	cd vo-amrwbenc
 	./configure \
 	    --prefix=$PREFIX \
@@ -127,15 +127,15 @@ function build_amr
 	    $ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
-	make -j4 install
+	make -j32 install
 	make clean
 	cd ..
-	echo "FINISHED amr for $ARCH"
+	echo "FINISHED amr for $ARCH and $CPU"
 }
 
 function build_aac
 {
-	echo "Starting build aac for $ARCH"
+	echo "Starting build aac for $ARCH and $CPU"
 	cd vo-aacenc
 	./configure \
 	    --prefix=$PREFIX \
@@ -147,14 +147,14 @@ function build_aac
 	    $ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
-	make -j4 install
+	make -j32 install
 	make clean
 	cd ..
-	echo "FINISHED aac for $ARCH"
+	echo "FINISHED aac for $ARCH and $CPU"
 }
 function build_freetype2
 {
-	echo "Starting build freetype2 for $ARCH"
+	echo "Starting build freetype2 for $ARCH and $CPU"
 	cd freetype2
 	./configure \
 	    --prefix=$PREFIX \
@@ -166,14 +166,14 @@ function build_freetype2
 	    $ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
-	make -j4 install
+	make -j32 install
 	make clean
 	cd ..
-	echo "FINISHED freetype2 for $ARCH"
+	echo "FINISHED freetype2 for $ARCH and $CPU"
 }
 function build_ass
 {
-	echo "Starting build ass for $ARCH"
+	echo "Starting build ass for $ARCH and $CPU"
 	cd libass
 	./configure \
 	    --prefix=$PREFIX \
@@ -186,14 +186,14 @@ function build_ass
 	    $ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
-	make V=1 -j4 install
+	make V=1 -j32 install
 	make clean
 	cd ..
-	echo "FINISHED ass for $ARCH"
+	echo "FINISHED ass for $ARCH and $CPU"
 }
 function build_fribidi
 {
-	echo "Starting build fribidi for $ARCH"
+	echo "Starting build fribidi for $ARCH and $CPU"
 	cd fribidi
 	./configure \
 	    --prefix=$PREFIX \
@@ -206,14 +206,14 @@ function build_fribidi
 	    $ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
-	make -j4 install
+	make -j32 install
 	make clean
 	cd ..
-	echo "FINISHED fribidi for $ARCH"
+	echo "FINISHED fribidi for $ARCH and $CPU"
 }
 function build_ffmpeg
 {
-	echo "Starting build ffmpeg for $ARCH"
+	echo "Starting build ffmpeg for $ARCH and $CPU"
 	cd ffmpeg
 	./configure --target-os=linux \
 	    --prefix=$PREFIX \
@@ -309,19 +309,19 @@ function build_ffmpeg
 	    --enable-asm \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
-	make -j4 install
+	make -j32 install
 	make clean
 
 	cd ..
-	echo "FINISHED ffmpeg for $ARCH"
+	echo "FINISHED ffmpeg for $ARCH and $CPU"
 }
 
 function build_one {
-	echo "Starting build one for $ARCH"
+	echo "Starting build one for $ARCH and $CPU"
 	cd ffmpeg
 	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavformat -lavresample -lavutil -lswresample -lass -lfreetype -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
-	echo "FINISHED one for $ARCH"
+	echo "FINISHED one for $ARCH and $CPU"
 }
 
 #arm v5
@@ -334,7 +334,8 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-5
+PLATFORM_VERSION=android-19
+
 setup_paths
 build_amr
 build_aac
@@ -353,7 +354,8 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=--disable-asm
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/x86-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-9
+PLATFORM_VERSION=android-19
+
 setup_paths
 build_amr
 build_aac
@@ -372,7 +374,8 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG="--disable-mips32r2"
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-9
+PLATFORM_VERSION=android-19
+
 setup_paths
 build_amr
 build_aac
@@ -392,7 +395,8 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-5
+PLATFORM_VERSION=android-19
+
 setup_paths
 build_amr
 build_aac
@@ -412,7 +416,8 @@ OUT_LIBRARY=../ffmpeg-build/armeabi-v7a/libffmpeg-neon.so
 ADDITIONAL_CONFIGURE_FLAG=--enable-neon
 SONAME=libffmpeg-neon.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-9
+PLATFORM_VERSION=android-19
+
 setup_paths
 build_amr
 build_aac
